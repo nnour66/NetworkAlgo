@@ -1,0 +1,25 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_1.2:
+  stage: build
+  script:
+    - cd 1.2-usocket
+    - make
+  artifacts:
+    paths:
+      - 1.2-usocket/usocket
+
+# run tests using the binary build before
+test_1.2:
+  stage: test
+  needs: [build_1.2]
+  script:
+  - |
+    echo "starting test"
+    cd 1.2-usocket
+    make test

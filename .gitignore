@@ -1,0 +1,32 @@
+# Ignore compiled files
+*.o
+*.out
+conv
+usocket
+usender
+ureceiver
+usender6
+ureceiver6
+usender64
+ureceiver64
+sender-udp
+receiver-udp
+sw-sender
+sw-receiver
+abp-sender
+abp-receiver
+gbn-sender
+gbn-receiver
+medium
+client-tcp
+serveur-tcp
+
+# Ignore log files
+*.log
+.idea
+.vscode
+ploup
+toto
+titi
+tata
+tutu

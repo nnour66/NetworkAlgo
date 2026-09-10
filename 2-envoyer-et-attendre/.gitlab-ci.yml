@@ -1,0 +1,26 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_2:
+  stage: build
+  script:
+    - cd 2-envoyer-et-attendre
+    - make
+  artifacts:
+    paths:
+      - 2-envoyer-et-attendre/sw-sender
+      - 2-envoyer-et-attendre/sw-receiver
+
+# run tests using the binary build before
+test_2:
+  stage: test
+  needs: [build_2]
+  script:
+  - |
+    echo "starting test"
+    cd 2-envoyer-et-attendre
+    make test

@@ -1,0 +1,26 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_1.5:
+  stage: build
+  script:
+    - cd 1.5-ipv6
+    - make
+  artifacts:
+    paths:
+      - 1.5-ipv6/ureceiver6
+      - 1.5-ipv6/usender6
+
+# run tests using the binary build before
+test_1.5:
+  stage: test
+  needs: [build_1.5]
+  script:
+  - |
+    echo "starting test"
+    cd 1.5-ipv6
+    ./test.sh

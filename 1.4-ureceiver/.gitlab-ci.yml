@@ -1,0 +1,25 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_1.4:
+  stage: build
+  script:
+    - cd 1.4-ureceiver
+    - make
+  artifacts:
+    paths:
+      - 1.4-ureceiver/ureceiver
+
+# run tests using the binary build before
+test_1.4:
+  stage: test
+  needs: [build_1.4]
+  script:
+  - |
+    echo "starting test"
+    cd 1.4-ureceiver
+    ./test.sh

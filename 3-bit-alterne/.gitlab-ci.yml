@@ -1,0 +1,27 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_3:
+  stage: build
+  script:
+    - cd 3-bit-alterne
+    - make
+  artifacts:
+    paths:
+      - 3-bit-alterne/abp-sender
+      - 3-bit-alterne/abp-receiver
+      - 3-bit-alterne/medium
+
+# run tests using the binary build before
+test_3:
+  stage: test
+  needs: [build_3]
+  script:
+  - |
+    echo "starting test"
+    cd 3-bit-alterne
+    make test

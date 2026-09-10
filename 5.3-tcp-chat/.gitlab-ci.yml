@@ -1,0 +1,26 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_5.3:
+  stage: build
+  script:
+    - cd 5.3-tcp-chat
+    - make
+  artifacts:
+    paths:
+      - 5.3-tcp-chat/server
+      - 5.3-tcp-chat/client
+
+# run tests using the binary build before
+test_5.3:
+  stage: test
+  needs: [build_5.3]
+  script:
+  - |
+    echo "starting test"
+    cd 5.3-tcp-chat
+    make test

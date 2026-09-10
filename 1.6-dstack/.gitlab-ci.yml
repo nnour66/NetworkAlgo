@@ -1,0 +1,26 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_1.6:
+  stage: build
+  script:
+    - cd 1.6-dstack
+    - make
+  artifacts:
+    paths:
+      - 1.6-dstack/ureceiver64
+      - 1.6-dstack/usender64
+
+# run tests using the binary build before
+test_1.6:
+  stage: test
+  needs: [build_1.6]
+  script:
+  - |
+    echo "starting test"
+    cd 1.6-dstack
+    ./test.sh

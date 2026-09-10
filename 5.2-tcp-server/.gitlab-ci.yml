@@ -1,0 +1,25 @@
+default:
+  image: "$GLOBAL_IMAGE"
+
+stages:
+  - build
+  - test
+
+build_5.2:
+  stage: build
+  script:
+    - cd 5.2-tcp-server
+    - make
+  artifacts:
+    paths:
+      - 5.2-tcp-server/server
+
+# run tests using the binary build before
+test_5.2:
+  stage: test
+  needs: [build_5.2]
+  script:
+  - |
+    echo "starting test"
+    cd 5.2-tcp-server
+    make test
