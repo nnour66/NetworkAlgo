@@ -256,7 +256,7 @@ fin ()
 	exit 0
     fi
 
-    if [ "FAILNUM" != "" ]
+    if [ "$FAILNUM" != "" ]
     then exitcode=1
     fi
 
