@@ -42,19 +42,76 @@ long int conversion(char *s)
     return v;
 }
 
+uint32_t convip(const char *ip)
+{
+    char *ip_copy = strdup(ip);
+    if (ip_copy == NULL) {
+        perror("strdup");
+        exit(EXIT_FAILURE);
+    }
+
+    uint32_t addr = 0;
+    char *token;
+    int i = 0;
+
+    token = strtok(ip_copy, ".");
+    while (token != NULL) {
+        if (i >= 4) {
+            fprintf(stderr, "Erreur : adresse trop longue\n");
+            free(ip_copy);
+            exit(EXIT_FAILURE);
+        }
+
+        long int val = conversion(token);
+
+        if (val < 0 || val > 255) {
+            fprintf(stderr, "Erreur : octet hors intervalle [0, 255]\n");
+            free(ip_copy);
+            exit(EXIT_FAILURE);
+        }
+
+        addr |= ((uint32_t)val << ((3 - i) * 8));
+
+        i++;
+        token = strtok(NULL, ".");
+    }
+
+    if (i != 4) {
+        fprintf(stderr, "Erreur : adresse trop courte\n");
+        free(ip_copy);
+        exit(EXIT_FAILURE);
+    }
+
+    free(ip_copy);
+    return addr;
+}
+
 
 int main(int argc, char *argv[])
 {
     if (argc != 4)
         usage(argv[0]);
 
-    /* TODO à compléter */
+    long int port_num = conversion(argv[2]);
+    long int timer= conversion(argv[3]);
 
-    long int duration = 0; /* à modifier */
+
+    int fd;
+    CHK(fd = socket(AF_INET, SOCK_DGRAM, 0));
+
+    struct sockaddr_in dest_addr;
+    memset(&dest_addr, 0, sizeof(dest_addr));
+    dest_addr.sin_family = AF_INET;
+    dest_addr.sin_port = htons((uint16_t)port_num);
+    dest_addr.sin_addr.s_addr = htonl(convip(argv[1]));
+
+    const char* msg = "hello world";
+    CHK(sendto(fd, msg, strlen(msg), 0, (const struct sockaddr*)&dest_addr, sizeof(dest_addr)));
     
-    sleep(duration); /* ne pas supprimer */
-
-    /* TODO fermer le socket */
+    
+    sleep(timer); 
+    CHK(close(fd));
+    
 
     return 0;
 }
