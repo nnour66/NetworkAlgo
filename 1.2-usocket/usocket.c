@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <errno.h>
+#include <string.h>
 
 #define CHK(op)                                                                \
     do {                                                                       \
@@ -43,14 +44,23 @@ int main(int argc, char *argv[])
     if (argc != 3)
         usage(argv[0]);
 
-    /* TODO à compléter */
+    long int port_number = conversion(argv[1]);
+    long int timer = conversion(argv[2]);
 
+    int fd;
+    CHK(fd=socket(AF_INET, SOCK_DGRAM, 0));
 
-    long int duration = 0; /* à modifier */
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
 
-    sleep(duration); /* ne pas supprimer */
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons((uint16_t)port_number);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    /* TODO fermer le socket */
+    CHK(bind(fd, (const struct sockaddr*)&addr, sizeof(addr)));
+
+    sleep(timer); 
+    CHK(close(fd));
 
     return 0;
 }
